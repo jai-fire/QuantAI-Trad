@@ -3,3 +3,33 @@ numpy
 scikit-learn
 ccxt
 PyQt6
+# requirements.txt
+
+# Data Handling
+numpy
+pandas
+scikit-learn
+
+# Machine Learning
+tensorflow
+keras
+xgboost
+lightgbm
+
+# Trading APIs
+ccxt
+alpaca-trade-api
+ib_insync
+
+# GUI
+PyQt5
+Tkinter
+
+# Database
+SQLAlchemy
+psycopg2
+mysql-connector-python
+
+# Async Operations
+asyncio
+aiohttp
