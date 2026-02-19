@@ -1,0 +1,14 @@
+# Default configuration settings for QuantAI-Trad
+
+settings:
+  version: "1.0"
+  last_updated: "2026-02-19 05:34:50"
+  features:
+    - feature_a: enabled
+    - feature_b: disabled
+  thresholds:
+    max_orders: 100
+    min_balance: 50.0
+  api:
+    endpoint: "https://api.quantai-trad.com"
+    timeout: 30
