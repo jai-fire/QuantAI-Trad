@@ -1,5 +1,5 @@
-balance = 1000
+from __future__ import annotations
 
-def execute(trade):
-    global balance
-    print("Paper trade:", trade)
+
+def fees(notional: float, taker_fee: float = 0.0004) -> float:
+    return abs(notional) * taker_fee

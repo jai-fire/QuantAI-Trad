@@ -6,3 +6,6 @@ logs/
 models/
 .env
 
+
+dist/
+.venv/

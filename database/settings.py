@@ -1,19 +1,16 @@
-import sqlite3
+from __future__ import annotations
 
-conn = sqlite3.connect("database/settings.db", check_same_thread=False)
-cursor = conn.cursor()
+from database.db import Database
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS settings (
-    key TEXT PRIMARY KEY,
-    value TEXT
-)
-""")
+_db = Database()
 
-def save_setting(key, value):
-    cursor.execute("REPLACE INTO settings VALUES (?,?)",(key,str(value)))
-    conn.commit()
 
-def load_settings():
-    cursor.execute("SELECT key,value FROM settings")
-    return dict(cursor.fetchall())
+def save_setting(key: str, value: str) -> None:
+    with _db.cursor() as cur:
+        cur.execute("REPLACE INTO settings (key, value) VALUES (?, ?)", (key, str(value)))
+
+
+def load_settings() -> dict[str, str]:
+    with _db.cursor() as cur:
+        rows = cur.execute("SELECT key, value FROM settings").fetchall()
+    return {r["key"]: r["value"] for r in rows}
