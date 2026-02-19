@@ -1,24 +1,46 @@
-import sqlite3
+from __future__ import annotations
 
-conn = sqlite3.connect("database/trades.db", check_same_thread=False)
-cursor = conn.cursor()
+import json
+from dataclasses import asdict
+from typing import Any
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS trades (
-    id INTEGER PRIMARY KEY,
-    time TEXT,
-    direction TEXT,
-    entry REAL,
-    exit REAL,
-    pnl REAL,
-    size REAL,
-    status TEXT
-)
-""")
+from database.db import Database
 
-def log_trade(trade):
-    cursor.execute(
-        "INSERT INTO trades (time,direction,entry,exit,pnl,size,status) VALUES (?,?,?,?,?,?,?)",
-        (trade["time"], trade["direction"], trade["entry"], trade["exit"], trade["pnl"], trade["size"], trade["status"])
-    )
-    conn.commit()
+
+class TradeStore:
+    def __init__(self, db: Database) -> None:
+        self.db = db
+
+    def insert_trade(self, trade: dict[str, Any]) -> None:
+        with self.db.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO trades (
+                    opened_at, closed_at, symbol, direction, entry, exit,
+                    stop_loss, take_profit, size, fees, pnl, confidence,
+                    risk_score, status, meta
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    trade.get("opened_at"),
+                    trade.get("closed_at"),
+                    trade.get("symbol"),
+                    trade.get("direction"),
+                    trade.get("entry"),
+                    trade.get("exit"),
+                    trade.get("stop_loss"),
+                    trade.get("take_profit"),
+                    trade.get("size"),
+                    trade.get("fees", 0.0),
+                    trade.get("pnl", 0.0),
+                    trade.get("confidence", 0.0),
+                    trade.get("risk_score", 0.0),
+                    trade.get("status"),
+                    json.dumps(trade.get("meta", {})),
+                ),
+            )
+
+    def list_recent(self, limit: int = 200) -> list[dict[str, Any]]:
+        with self.db.cursor() as cur:
+            rows = cur.execute("SELECT * FROM trades ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
+        return [dict(r) for r in rows]
