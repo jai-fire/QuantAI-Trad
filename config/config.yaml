@@ -1,14 +1,17 @@
-# Default configuration settings for QuantAI-Trad
-
-settings:
-  version: "1.0"
-  last_updated: "2026-02-19 05:34:50"
-  features:
-    - feature_a: enabled
-    - feature_b: disabled
-  thresholds:
-    max_orders: 100
-    min_balance: 50.0
-  api:
-    endpoint: "https://api.quantai-trad.com"
-    timeout: 30
+trading_settings:
+  leverage: 2
+  max_positions: 10
+api_configuration:
+  api_key: your_api_key_here
+  api_secret: your_api_secret_here
+model_parameters:
+  model_type: regression
+  epochs: 100
+risk_settings:
+  max_drawdown: 0.2
+  stop_loss: 0.1
+  take_profit: 0.3
+database_configuration:
+  db_type: sqlite
+  db_name: quantai.db
+  db_path: /path/to/database/
